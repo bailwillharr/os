@@ -20,7 +20,7 @@ real_start:
 	movw	$LOADING_STR, %si
 	call	message
 
-	/* load LBA 1-16 off of the disk into 0x10000 */
+	/* load LBA 1-32 off of the disk into 0x10000 */
 	movb	$0x42, %ah
 	popw	%dx		/* restore drive reference */
 	movw	$DAP, %si
@@ -82,7 +82,7 @@ LOADED_STR:
 DAP:
 	.byte	0x10	/* size of DAP */
 	.byte	0x00	/* unused (0) */
-	.word	16	/* read 16 sectors, 8 KB */
+	.word	32	/* read 16 sectors, 16 KB */
 	.word	0x0000	/* offset of destination memory buffer */
 	.word	0x1000	/* segment of destination memory buffer */
 	.quad	1	/* first LBA */
