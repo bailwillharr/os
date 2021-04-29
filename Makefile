@@ -8,9 +8,9 @@ kernel.bin: kernel.o
 	ld -o kernel.bin kernel.o -Ttext 0x10000 --oformat=binary
 	chmod -x kernel.bin
 bootloader.o: bootloader.S
-	as -o bootloader.o bootloader.S
-kernel.o: kernel.S
-	as -o kernel.o kernel.S
+	gcc -c -o bootloader.o bootloader.S
+kernel.o: kernel.S video.h
+	gcc -c -o kernel.o kernel.S
 clean:
 	rm -f *.o
 	rm -f *.bin

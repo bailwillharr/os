@@ -35,10 +35,26 @@ disk_read_success:
 	movw	$LOADED_STR, %si
 	call	message
 
-	
+	/* enable protected (32 bit) mode */
+	cli
 
-	ljmp	$0x1000, $0x0000	/* jump to loaded memory */
+	in	$0x92, %al		/* enable A20 line */
+	or	$2, %al
+	out	%al, $0x92
 
+	lgdt	GDTD			/* load global descriptor table */
+	movl	%cr0, %eax
+	orl	$1, %eax
+	movl	%eax, %cr0
+	ljmp	$0x08, $clear_pipe	/* clear instruction pipeline */
+	.code32
+clear_pipe:
+	movw	$0x10, %ax		/* 2nd GDT entry for data segment */
+	movw	%ax, %ds
+	movw	%ax, %ss
+	movl	$0x00070000, %esp	/* almost top of 480K memory space */
+	jmp	0x00010000
+	.code16
 /*
  * message: write the string pointed to by %si
  * WARNING: trashes %si, %ax, and %bx
@@ -70,6 +86,32 @@ DAP:
 	.word	0x0000	/* offset of destination memory buffer */
 	.word	0x1000	/* segment of destination memory buffer */
 	.quad	1	/* first LBA */
+
+/* GDT */
+	.align	16
+GDTD:
+	.word	GDT_END - GDT - 1
+	.long	GDT
+
+	.align	16
+GDT:
+GDT_NULL:
+	.quad	0
+GDT_CODE:
+	.word	0xFFFF		/* limit 0:15 */
+	.word	0x0000		/* base 0:15 */
+	.byte	0x00		/* base 16:23 */
+	.byte	0b10011010	/* type and attributes */
+	.byte	0b11001111	/* limit 16:19 (0xF) and attributes */
+	.byte	0x00		/* base 24:31 */
+GDT_DATA_SEGMENT:
+	.word	0xFFFF		/* limit 0:15 */
+	.word	0x0000		/* base 0:15 */
+	.byte	0x00		/* base 16:23 */
+	.byte	0b10010010	/* type and attributes */
+	.byte	0b11001111	/* limit 16:19 (0xF) and attributes */
+	.byte	0x00		/* base 24:31 */
+GDT_END:
 
 	.org	0x1B8	/* leave room for the disk ID and partition table */
 	.org	510
