@@ -1,19 +1,21 @@
 CC	= c99
-
+CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie -c
 os.img: bootloader.bin kernel.bin
 	dd if=bootloader.bin of=os.img bs=512 count=1 seek=0
 	dd if=kernel.bin of=os.img bs=512 seek=1
 	truncate -s 64K os.img
 bootloader.bin: bootloader.o
-	ld -o bootloader.bin bootloader.o -Ttext 0x7C00 --oformat=binary
+	ld -o bootloader.bin -Ttext 0x7C00 --oformat=binary bootloader.o
 	chmod -x bootloader.bin
-kernel.bin: kernel.o
-	ld -Tlink.ld -m elf_i386 -o kernel.bin kernel.o
+kernel.bin: kernel.o video.o
+	ld -Tlink.ld -m elf_i386 -o kernel.bin kernel.o video.o
 	chmod -x kernel.bin
 bootloader.o: bootloader.S
 	$(CC) -c -o bootloader.o bootloader.S
-kernel.o: kernel.c
-	$(CC) -m32 -nostdlib -nostdinc -fno-builtin -fno-pie -c -o kernel.o kernel.c
+kernel.o: kernel.c video.h
+	$(CC) $(CFLAGS) -o kernel.o kernel.c
+video.o: video.c video.h
+	$(CC) $(CFLAGS) -o video.o video.c
 clean:
 	rm -f *.o
 	rm -f *.bin
