@@ -11,16 +11,16 @@ os.img: boot.bin kernel.bin
 	truncate -s 1440K os.img
 
 boot.bin: boot.o
-	ld -Tboot.ld -o $@ $<
+	ld -Tboot.ld -o $@ $^
 	chmod -x $@
 kernel.bin: $(OBJS)
 	ld -Tkernel.ld -m elf_i386 -o $@ $(OBJS)
 	chmod -x $@
 
 %.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS)
+	$(CC) -o $@ -c $^ $(CFLAGS)
 %.o: %.S
-	$(CC) -o $@ -c $<
+	$(CC) -o $@ -c $^
 
 -include $(OBJS:.o=.d)
 
