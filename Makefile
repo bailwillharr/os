@@ -1,7 +1,9 @@
 CC	= c99
 CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie -MD
 
-OBJS	= kernel.o video.o
+SRCS	= $(wildcard *.c)
+
+OBJS	= $(SRCS:.c=.o)
 
 os.img: boot.bin kernel.bin
 	dd if=boot.bin of=os.img bs=512 count=1 seek=0
@@ -9,9 +11,9 @@ os.img: boot.bin kernel.bin
 	truncate -s 1440K os.img
 
 boot.bin: boot.o
-	ld -Ttext 0x7C00 --oformat=binary -o $@ $<
+	ld -Tboot.ld -o $@ $<
 	chmod -x $@
-kernel.bin: kernel.o video.o
+kernel.bin: $(OBJS)
 	ld -Tkernel.ld -m elf_i386 -o $@ $(OBJS)
 	chmod -x $@
 
@@ -20,6 +22,8 @@ kernel.bin: kernel.o video.o
 %.o: %.S
 	$(CC) -o $@ -c $<
 
+-include $(OBJS:.o=.d)
+
 clean:
 	rm -f *.o
 	rm -f *.d
@@ -27,4 +31,3 @@ clean:
 	rm -f *.img
 test: os.img
 	qemu-system-x86_64 -drive file=os.img,if=ide,index=0,format=raw
-	make clean

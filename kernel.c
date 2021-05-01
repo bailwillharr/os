@@ -2,6 +2,8 @@
 
 void _start()
 {
-	video_write_str(0, 3, "finally 32 bit and C are working");
+	video_test();
+	video_write_str(0, 3, VIDEO_TEST_STR);
+	video_write_str(0, 10, "TEST");
 	for ( ;; ) ;	// stop the CPU from executing random RAM
 }
