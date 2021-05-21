@@ -2,8 +2,9 @@
 
 void _start()
 {
-	video_test();
-	video_write_str(0, 3, VIDEO_TEST_STR);
-	video_write_str(0, 10, "TEST");
+	video_clear();
+	print("The quick\nbrown fox\njumps over\nthe lazy\ndog.\n");
+	video_colour = 0x01;
+	print("asdf\n");
 	for ( ;; ) ;	// stop the CPU from executing random RAM
 }

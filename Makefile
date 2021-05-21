@@ -1,5 +1,5 @@
 CC	= c99
-CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie -MD
+CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie
 
 SRCS	= $(wildcard *.c)
 
@@ -21,8 +21,6 @@ kernel.bin: $(OBJS)
 	$(CC) -o $@ -c $^ $(CFLAGS)
 %.o: %.S
 	$(CC) -o $@ -c $^
-
--include $(OBJS:.o=.d)
 
 clean:
 	rm -f *.o

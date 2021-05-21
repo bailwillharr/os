@@ -4,23 +4,23 @@ SECTIONS
 {
     . = 0x10000;
 
-    .text BLOCK(16K) : ALIGN(16K)
+    .text BLOCK(4K) : ALIGN(4K)
     {
         *(.text.prologue)
         *(.text)
     }
 
-    .rodata BLOCK(16K) : ALIGN(16K)
+    .rodata BLOCK(4K) : ALIGN(4K)
     {
         *(.rodata)
     }
 
-    .data BLOCK(16K) : ALIGN(16K)
+    .data BLOCK(4K) : ALIGN(4K)
     {
         *(.data)
     }
 
-    .bss BLOCK(16K) : ALIGN(16K)
+    .bss BLOCK(4K) : ALIGN(4K)
     {
         *(.bss)
     }

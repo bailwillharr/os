@@ -32,9 +32,6 @@ real_start:
 	jmp	1b
 disk_read_success:
 
-	movw	$LOADED_STR, %si
-	call	message
-
 	/* enable protected (32 bit) mode */
 	cli
 
@@ -75,14 +72,11 @@ LOADING_STR:
 DISK_ERR_STR:
 	.asciz	"ERROR: Unable to read disk.\r\n"
 
-LOADED_STR:
-	.asciz	"Loaded Disk.\r\n"
-
 /* Disk Address Packet */
 DAP:
 	.byte	0x10	/* size of DAP */
 	.byte	0x00	/* unused (0) */
-	.word	128	/* read 128 sectors, 64 KB */
+	.word	32	/* read 128 sectors, 64 KB */
 	.word	0x0000	/* offset of destination memory buffer */
 	.word	0x1000	/* segment of destination memory buffer */
 	.quad	1	/* first LBA */
