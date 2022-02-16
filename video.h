@@ -1,35 +1,31 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-// video colour attributes
-#define BLACK		0x0
-#define BLUE		0x1
-#define GREEN		0x2
-#define CYAN		0x3
-#define RED		0x4
-#define MAGENTA		0x5
-#define BROWN		0x6
-#define L_GREY		0x7
-#define D_GREY		0x8
-#define L_BLUE		0x9
-#define LIGHT_GREEN	0xA
-#define LIGHT_CYAN	0xB
-#define LIGHT_RED	0xC
-#define LIGHT_MAGENTA	0xD
-#define YELLOW		0xE
-#define WHITE		0xF
+#define WIDTH 320
+#define HEIGHT 200
 
-#define colour(b, f)	(b << 4) | f
+enum colors {
+	BLACK,
+	BLUE,
+	GREEN,
+	CYAN,
+	RED,
+	MAGENTA,
+	BROWN,
+	LIGHT_GREY,
+	DARK_GREY,
+	LIGHT_BLUE,
+	LIGHT_GREEN,
+	LIGHT_CYAN,
+	LIGHT_RED,
+	LIGHT_MAGENTA,
+	YELLOW,
+	WHITE
+}; // the first 16 colors
 
-extern int video_cursor_pos;
-extern int video_colour;
-
-void video_write_char(int x, int y, char c);
-void video_write_str(int x, int y, const char* str);
-void video_clear();
-void video_test();
-
-void print(const char* str);
-void println(const char* str);
+void video_plot_pix(int x, int y, char c);
+void video_draw_line(int x0, int y0, int x1, int y1, char c);
+void video_draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, char c);
+void video_clear(char c);
 
 #endif

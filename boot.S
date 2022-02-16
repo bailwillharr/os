@@ -1,6 +1,6 @@
 .text
 .code16
-.globl	_start
+.globl _start
 _start:
 	ljmp	$0, $real_start	/* ensure CS = 0x0000 */
 real_start:
@@ -31,6 +31,11 @@ real_start:
 1:
 	jmp	1b
 disk_read_success:
+
+	/* change video mode */
+	movb	$0x00, %ah
+	movb	$0x13, %al
+	int	$0x10
 
 	/* enable protected (32 bit) mode */
 	cli
@@ -67,7 +72,7 @@ message:
 	ret
 
 LOADING_STR:
-	.asciz	"Loading...\r\n"
+	.asciz	"Loading os...\r\n"
 
 DISK_ERR_STR:
 	.asciz	"ERROR: Unable to read disk.\r\n"

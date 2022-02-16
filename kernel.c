@@ -1,10 +1,12 @@
 #include "video.h"
 
-void _start()
+void kernel_entry()
 {
-	video_clear();
-	print("The quick\nbrown fox\njumps over\nthe lazy\ndog.\n");
-	video_colour = 0x01;
-	print("asdf\n");
-	for ( ;; ) ;	// stop the CPU from executing random RAM
+
+	video_clear(DARK_GREY);
+
+	video_draw_triangle(10, 10, 100, 20, 50, 130, RED);
+
+	for ( ;; ) ;
+
 }

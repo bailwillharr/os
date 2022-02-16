@@ -28,4 +28,4 @@ clean:
 	rm -f *.bin
 	rm -f *.img
 test: os.img
-	qemu-system-x86_64 -drive file=os.img,if=ide,index=0,format=raw
+	qemu-system-x86_64 -drive file=os.img,if=ide,index=0,format=raw -display sdl

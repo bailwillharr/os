@@ -1,65 +1,47 @@
 #include "video.h"
+#include "math.h"
 
-// Externs
-int video_cursor_pos = 0;
-int video_colour = colour(BLACK, GREEN);
+static char * const VRAM = (char *)0xA0000;
 
-void video_write_char(int x, int y, char c)
-{
-	char* ptr = (char*)0xB8000;	// start of VRAM
-	ptr += (y * 160) + (x * 2);
-	*ptr = c;
-	ptr++;
-	*ptr = video_colour;
+void video_plot_pix(int x, int y, char c) {
+	VRAM[y * WIDTH + x] = c;
 }
 
-void video_write_str(int x, int y, const char* str)
-{
-	for (int i = 0; str[i] != 0; i++)
-		video_write_char(x+i, y, str[i]);
+void video_draw_line(int x0, int y0, int x1, int y1, char c) {
+    int dx = abs(x1-x0);
+    int dy = abs(y1-y0);
+    signed short sx,sy;
+    signed int err,e2;
+
+    if (x0 < x1) {sx = 1;} else {sx = -1;}
+    if (y0 < y1) {sy = 1;} else {sy = -1;}
+    err = dx-dy;
+
+    while (!(x0==x1 && y0==y1))
+    {
+		video_plot_pix(x0, y0, c);
+        e2 = 2*err;
+        if (e2 > -dy) 
+        {
+            err = err - dy;
+            x0 += sx;
+        }
+        if (e2 < dx) 
+        {
+            err = err + dx;
+            y0 += sy;
+        }
+    }
 }
 
-void video_clear()
-{
-	char* ptr = (char*)0xB8000;
-	for (int i = 0; i < 80*25; i++) {
-		ptr[i * 2 + 0] = ' ';
-		ptr[i * 2 + 1] = 0;
+void video_draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, char c) {
+	video_draw_line(x0, y0, x1, y1, c);
+	video_draw_line(x1, y1, x2, y2, c);
+	video_draw_line(x2, y2, x0, y0, c);
+}
+
+void video_clear(char c) {
+	for (int i = 0; i < WIDTH * HEIGHT; i++) {
+		VRAM[i] = c;
 	}
-}
-
-void video_test()
-{
-	char* ptr = (char*)0xB8000;
-	for (int i = 0; i < 80*25; i++) {
-		ptr[i * 2 + 0] = ' '+(i & 63);
-		ptr[i * 2 + 1] = i;
-	}
-}
-
-void print(const char* str)
-{
-	int row = video_cursor_pos / 80;
-	int col = video_cursor_pos % 80;
-	for (int i = 0; str[i] != 0; i++) {
-		char c = str[i];
-		switch (c) {
-		case '\n':
-			video_cursor_pos += 80 - (video_cursor_pos % 80);
-			break;
-		default:
-			video_write_char(
-					video_cursor_pos % 80,
-					video_cursor_pos / 80, c
-					);
-			video_cursor_pos++;
-		}
-	}
-}
-
-void println(const char* str)
-{
-	print(str);
-	video_cursor_pos += 80 - (video_cursor_pos % 80);
-	video_cursor_pos++;
 }
