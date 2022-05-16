@@ -1,5 +1,5 @@
 CC	= c99
-CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie
+CFLAGS	= -m32 -nostdlib -nostdinc -fno-builtin -fno-pie -Ofast
 
 SRCS	= $(wildcard *.c)
 

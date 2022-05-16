@@ -23,7 +23,7 @@ enum colors {
 	WHITE
 }; // the first 16 colors
 
-void video_plot_pix(int x, int y, char c);
+void video_plot_px(int x, int y, char c);
 void video_draw_line(int x0, int y0, int x1, int y1, char c);
 void video_draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, char c);
 void video_clear(char c);

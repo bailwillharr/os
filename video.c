@@ -3,7 +3,7 @@
 
 static char * const VRAM = (char *)0xA0000;
 
-void video_plot_pix(int x, int y, char c) {
+void video_plot_px(int x, int y, char c) {
 	VRAM[y * WIDTH + x] = c;
 }
 
@@ -19,7 +19,7 @@ void video_draw_line(int x0, int y0, int x1, int y1, char c) {
 
     while (!(x0==x1 && y0==y1))
     {
-		video_plot_pix(x0, y0, c);
+		video_plot_px(x0, y0, c);
         e2 = 2*err;
         if (e2 > -dy) 
         {
