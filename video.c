@@ -45,3 +45,7 @@ void video_clear(char c) {
 		VRAM[i] = c;
 	}
 }
+
+void video_draw_mesh(const Triangle3D *triangles, int numTriangles, Mat4 viewMatrix, Mat4 projMatrix)
+{
+}
